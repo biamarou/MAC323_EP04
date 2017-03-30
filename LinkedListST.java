@@ -175,6 +175,8 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
 	    head.next = temporary;
 	}
 
+	while (tail.next != null) tail = tail.next;
+
 	return;
 	
     }
@@ -227,10 +229,147 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
 	}
     }
 
+    
+
+   /***************************************************************************
+    *  Ordered symbol table methods
+    **************************************************************************/
+
+    /** Returns the smallest key in this table.
+     * Returns null if the table is empty.
+     */
+    public Key min() {
+        // escreva seu método a seguir
+	return head.key;
+    }
+
+   
+    /** Returns the greatest key in this table.
+     * Returns null if the table is empty.
+     */
+    public Key max() {
+        // escreva seu método a seguir
+	return tail.key;
+    }
+
+    /** Returns a key that is strictly greater than 
+     * (exactly) k other keys in the table. 
+     * Returns null if k < 0.
+     * Returns null if k is greater that or equal to 
+     * the total number of keys in the table.
+     */
+    public Key select(int k) {
+        // escreva seu método a seguir
+	if (k < 0 || k > size) return null;
+
+	Node temporary = head;
+	
+	for (int i = 0; i <= k; i++) {
+	    temporary = temporary.next;
+	}
+
+	return temporary.next;
+    }
+
+    /** Returns the greatest key that is 
+     * smaller than or equal to the given key.
+     * Argument key must be nonnull.
+     * If there is no such key in the table
+     * (i.e., if the given key is smaller than any key in the table), 
+     * returns null.
+     */
+    public Key floor(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to floor() is null");
+        // escreva seu método a seguir
+	Node temporary = null;
+	
+	for (Node i = head; i.key.compareTo(key) < 0; i = i.next) {
+	    temporary = i;
+	}
+
+	if (i.key.compareTo(key) == 0) {
+	    return i;
+	}
+
+	return temporary;
+    }
+
+    /** Returns the smallest key that is 
+     * greater than or equal to the given key.
+     * Argument key must be nonnull.
+     * If there is no such key in the table
+     * (i.e., if the given key is greater than any key in the table), 
+     * returns null.
+     */
+    public Key ceiling(Key key) {
+        if (key == null) throw new IllegalArgumentException("argument to ceiling() is null");
+        // escreva seu método a seguir
+	Node temporary = null;
+	
+	for (Node i = head; i.key.compareTo(key) < 0; i = i.next) {
+	    temporary = i;
+	}
+
+	if (i.key.compareTo(key) == 0) {
+	    return i;
+	}
+
+	return temporary.next;
+	
+    }
+
+    /** Returns all keys in the symbol table as an Iterable.
+     * To iterate over all of the keys in the symbol table named st, use the
+     * foreach notation: for (Key key : st.keys()).
+     */
+    public Iterable<Key> keys() {
+        return new ListKeys();
+    }
+
+    /**
+     * implements Iterable<Key> significa que essa classe deve 
+     * ter um método iterator(), acho...
+     */
+    private class ListKeys implements Iterable<Key> {
+        /** 
+         * Devolve um iterador que itera sobre os itens da ST 
+         * da menor até a maior chave.<br>
+         */
+        public Iterator<Key> iterator() {
+            return new KeysIterator();
+        }
+        
+        private class KeysIterator implements Iterator<Key> {
+            // variáveis do iterador
+	    Node iterator = head;
+            
+            public boolean hasNext() {
+                // escreva seu método a seguir
+		if (iterator != null)
+		    return iterator.next != null;
+            }
+
+            public Key next() {
+                // escreva seu método a seguir
+		Node save = null;
+		if (iterator != null) {
+		    save = iterator;
+		    iterator = iterator.next;
+		}
+		return save.key;
+            }
+                    
+            public void remove() { 
+                throw new UnsupportedOperationException(); 
+            }
+        }
+    }
+
     public void print () {
 	for (Node i = head; i != null; i = i.next)
 	    StdOut.println(i.key);
     }
+    
 
    /** Test client.
     * Reads a sequence of strings from the standard input.
