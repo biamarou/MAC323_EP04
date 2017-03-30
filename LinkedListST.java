@@ -50,36 +50,48 @@ import java.util.Iterator;
  */
 
 public class LinkedListST<Key extends Comparable<Key>, Value> {
-    // atributos de estado 
-    LinkedList <ST> list;
+    // atributos de estado
+    int size;
+    Node head;
+    Node tail;
 
-    private class ST {
-	String key;
-	int value;
+    private class Node {
+	Key key;
+	Value value;
+	Node next;
     }
+    
     /** Constructor.
      * Creates an empty symbol table with default initial capacity.
      */
     public LinkedListST() {
         // escreva seu método a seguir
+	head = new Node();
     }   
 
     /** Is the key in this symbol table?
      */
     public boolean contains(Key key) {
         // escreva seu método a seguir
+	for (Node i = head; i != null; i = i.next)
+	    if (i.key.compareTo(key) == 0)
+		return true;
+
+	return false;
     }
 
     /** Returns the number of (key,value) pairs in this symbol table.
      */
     public int size() {
         // escreva seu método a seguir
+	return size;
     }
 
     /** Is this symbol table empty?
      */
     public boolean isEmpty() {
         // escreva seu método a seguir
+	return size == 0;
     }
 
     /** Returns the value associated with the given key, 
@@ -89,6 +101,12 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
     public Value get(Key key) {
         if (key == null) throw new IllegalArgumentException("argument to get() is null");
         // escreva seu método a seguir
+	for (Node i = head; i != null; i = i.next) {
+	    if (i.key.compareTo(key) == 0) {
+		return i.value;
+	    }
+	}
+	return null;
     } 
     
     /** Returns the number of keys in the table 
@@ -98,6 +116,12 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
     public int rank(Key key) {
         if (key == null) throw new IllegalArgumentException("argument to rank() is null");
         // escreva seu método a seguir
+	int smaller = 0;
+
+	for (Node i = head; i != null && i.key.compareTo(key) < 0; i = i.next)
+	    smaller++;
+
+	return smaller;
     } 
 
     
@@ -109,139 +133,31 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
      */
     public void put(Key key, Value val)  {
         if (key == null) throw new IllegalArgumentException("argument to put() is null");
-        if (val == null) { 
-            delete(key); 
-            return; 
-        }
+       
         // escreva seu método a seguir
-    } 
+	if (head.key == null) {
+	    head.key = key;
+	    head.value = val;
+	    tail = head;
+	}
 
-
-    /** Remove key (and the corresponding value) from this symbol table.
-     * If key is not in the table, do nothing.
-     */
-    public void delete(Key key)  {
-        if (key == null) throw new IllegalArgumentException("argument to put() is null");
-        // escreva seu método a seguir
-    } 
-
-    /** Delete the minimum key and its associated value
-     * from this symbol table.
-     * The symbol table must be nonempty.
-     */
-    public void deleteMin() {
-        if (isEmpty()) throw new java.util.NoSuchElementException("deleteMin(): Symbol table underflow error");
-        // escreva seu método a seguir
+	for (Node i = head; i != null; i = i.next) {
+	    if (i.key.compareTo(key) == 0) {
+		i.value = val;
+		return;
+	    }
+	}
+	
+	tail.next = new Node();
+	tail.next.key = key;
+	tail.next.value = val;
+	tail = tail.next;
+	
     }
 
-    /** Delete the maximum key and its associated value
-     * from this symbol table.
-     */
-    public void deleteMax() {
-        if (isEmpty()) throw new java.util.NoSuchElementException("deleteMax(): Symbol table underflow error");
-        // escreva seu método a seguir
-    }
-
-
-   /***************************************************************************
-    *  Ordered symbol table methods
-    **************************************************************************/
-
-    /** Returns the smallest key in this table.
-     * Returns null if the table is empty.
-     */
-    public Key min() {
-        // escreva seu método a seguir
-    }
-
-   
-    /** Returns the greatest key in this table.
-     * Returns null if the table is empty.
-     */
-    public Key max() {
-        // escreva seu método a seguir
-    }
-
-    /** Returns a key that is strictly greater than 
-     * (exactly) k other keys in the table. 
-     * Returns null if k < 0.
-     * Returns null if k is greater that or equal to 
-     * the total number of keys in the table.
-     */
-    public Key select(int k) {
-        // escreva seu método a seguir
-    }
-
-    /** Returns the greatest key that is 
-     * smaller than or equal to the given key.
-     * Argument key must be nonnull.
-     * If there is no such key in the table
-     * (i.e., if the given key is smaller than any key in the table), 
-     * returns null.
-     */
-    public Key floor(Key key) {
-        if (key == null) throw new IllegalArgumentException("argument to floor() is null");
-        // escreva seu método a seguir
-    }
-
-    /** Returns the smallest key that is 
-     * greater than or equal to the given key.
-     * Argument key must be nonnull.
-     * If there is no such key in the table
-     * (i.e., if the given key is greater than any key in the table), 
-     * returns null.
-     */
-    public Key ceiling(Key key) {
-        if (key == null) throw new IllegalArgumentException("argument to ceiling() is null");
-        // escreva seu método a seguir
-    }
-
-    /** Returns all keys in the symbol table as an Iterable.
-     * To iterate over all of the keys in the symbol table named st, use the
-     * foreach notation: for (Key key : st.keys()).
-     */
-    public Iterable<Key> keys() {
-        return new ListKeys();
-    }
-
-    /**
-     * implements Iterable<Key> significa que essa classe deve 
-     * ter um método iterator(), acho...
-     */
-    private class ListKeys implements Iterable<Key> {
-        /** 
-         * Devolve um iterador que itera sobre os itens da ST 
-         * da menor até a maior chave.<br>
-         */
-        public Iterator<Key> iterator() {
-            return new KeysIterator();
-        }
-        
-        private class KeysIterator implements Iterator<Key> {
-            // variáveis do iterador
-            
-            public boolean hasNext() {
-                // escreva seu método a seguir
-            }
-
-            public Key next() {
-                // escreva seu método a seguir
-            }
-                    
-            public void remove() { 
-                throw new UnsupportedOperationException(); 
-            }
-        }
-    }
-
-
-   /***************************************************************************
-    *   Check internal invariants: pode ser útil durante o desenvolvimento 
-    **************************************************************************/
-    
-    // are the items in the linked list in ascending order?
-    private boolean isSorted() {
-        // escreva seu método a seguir
+    public void print () {
+	for (Node i = head; i != null; i = i.next)
+	    StdOut.println(i.key);
     }
 
    /** Test client.
@@ -258,8 +174,6 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
             String key = StdIn.readString();
             st.put(key, i);
         }
-        for (String s : st.keys())
-            StdOut.println(s + " " + st.get(s));
+	st.print();
     }
 }
-
