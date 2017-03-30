@@ -155,6 +155,54 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
 	
     }
 
+    /** Remove key (and the corresponding value) from this symbol table.
+     * If key is not in the table, do nothing.
+     */
+    public void delete(Key key)  {
+        if (key == null) throw new IllegalArgumentException("argument to put() is null");
+        // escreva seu método a seguir
+	Node temporary;
+	for (Node i = head; i != null; i = i.next) {
+	    if (i.key.compareTo(key) == 0) {
+		temporary.next = i.next;
+		i = null;
+		return;
+	    }
+	    
+            temporary = i;
+	}
+	
+    } 
+
+    /** Delete the minimum key and its associated value
+     * from this symbol table.
+     * The symbol table must be nonempty.
+     */
+    public void deleteMin() {
+        if (isEmpty()) throw new java.util.NoSuchElementException("deleteMin(): Symbol table underflow error");
+        // escreva seu método a seguir
+	Node temporary = head;
+	head = head.next;
+	temporary = null;
+    }
+
+    /** Delete the maximum key and its associated value
+     * from this symbol table.
+     */
+    public void deleteMax() {
+        if (isEmpty()) throw new java.util.NoSuchElementException("deleteMax(): Symbol table underflow error");
+        // escreva seu método a seguir
+	Node temporary;
+	for (Node i = head; i != null; i = i.next) {
+	    if (i.next == null) {
+		temporary.next = i.next;
+		tail = temporary;
+		i = null;
+	    }
+	    temporary = i;
+	}
+    }
+
     public void print () {
 	for (Node i = head; i != null; i = i.next)
 	    StdOut.println(i.key);
@@ -170,10 +218,36 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
     public static void main(String[] args) { 
         LinkedListST<String, Integer> st;
         st = new LinkedListST<String, Integer>();
-        for (int i = 0; !StdIn.isEmpty(); i++) {
+	String comando, palavra;
+	In arquivo;
+	for (int i = 0; !StdIn.isEmpty(); i++) {
             String key = StdIn.readString();
             st.put(key, i);
         }
-	st.print();
+	
+	while (!StdIn.isEmpty()) {
+               comando = StdIn.readString();
+	
+	       switch (comando) {
+	           case "show":
+		       st.print();
+		       break;
+	           case "delete":
+		       palavra = StdIn.readString();
+		       if (st.contains(palavra)) {
+		           st.delete(palavra);
+		       }
+		       break;
+	           case "contains":
+		       palavra = StdIn.readString();
+		       StdOut.println(st.contains(palavra));
+		       break;
+	           case "size":
+		       StdOut.println(st.size());
+		       break;
+	           default:
+		       StdOut.println(st.get(comando));
+	       }
+	 }
     }
 }
