@@ -240,7 +240,9 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
      */
     public Key min() {
         // escreva seu método a seguir
-	return head.key;
+	if (head.key != null)
+	    return head.key;
+	return null;
     }
 
    
@@ -249,7 +251,9 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
      */
     public Key max() {
         // escreva seu método a seguir
-	return tail.key;
+        if (tail != null)
+	    return tail.key;
+	return null;
     }
 
     /** Returns a key that is strictly greater than 
@@ -268,7 +272,7 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
 	    temporary = temporary.next;
 	}
 
-	return temporary.next;
+	return temporary.next.key;
     }
 
     /** Returns the greatest key that is 
@@ -282,16 +286,17 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
         if (key == null) throw new IllegalArgumentException("argument to floor() is null");
         // escreva seu método a seguir
 	Node temporary = null;
+	Node i = null;
 	
-	for (Node i = head; i.key.compareTo(key) < 0; i = i.next) {
+	for (i = head; i.key.compareTo(key) < 0; i = i.next) {
 	    temporary = i;
 	}
 
 	if (i.key.compareTo(key) == 0) {
-	    return i;
+	    return i.key;
 	}
 
-	return temporary;
+	return temporary.key;
     }
 
     /** Returns the smallest key that is 
@@ -305,16 +310,17 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
         if (key == null) throw new IllegalArgumentException("argument to ceiling() is null");
         // escreva seu método a seguir
 	Node temporary = null;
+	Node i = null;
 	
-	for (Node i = head; i.key.compareTo(key) < 0; i = i.next) {
+	for (i = head; i.key.compareTo(key) < 0; i = i.next) {
 	    temporary = i;
 	}
 
 	if (i.key.compareTo(key) == 0) {
-	    return i;
+	    return i.key;
 	}
 
-	return temporary.next;
+	return temporary.next.key;
 	
     }
 
@@ -345,8 +351,10 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
             
             public boolean hasNext() {
                 // escreva seu método a seguir
-		if (iterator != null)
-		    return iterator.next != null;
+		if (iterator != null && iterator.next != null)
+		    return true;
+		return false;
+		    
             }
 
             public Key next() {
@@ -392,6 +400,14 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
                comando = StdIn.readString();
 	
 	       switch (comando) {
+	           case "rank":
+		       palavra = StdIn.readString();
+		       if (st.contains(palavra)) {
+		           StdOut.println(st.rank(palavra));
+		       }
+		       break;
+		       
+		   
 	           case "show":
 		       st.print();
 		       break;
