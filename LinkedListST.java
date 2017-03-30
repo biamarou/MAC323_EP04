@@ -35,7 +35,9 @@ import edu.princeton.cs.algs4.StdOut;
 
 // https://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html 
 // http://codereview.stackexchange.com/questions/48109/simple-example-of-an-iterable-and-an-iterator-in-java
-import java.util.Iterator; 
+import java.util.Iterator;
+
+import edu.princeton.cs.algs4.In;
 
 /** This is an implementation of a symbol table whose keys are comparable.
  * The keys are kept in increasing order in an linked list.
@@ -135,23 +137,45 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
         if (key == null) throw new IllegalArgumentException("argument to put() is null");
        
         // escreva seu método a seguir
+	Node temporary = null;
+	Node recent = null;
+	Node i;
+	
 	if (head.key == null) {
 	    head.key = key;
 	    head.value = val;
 	    tail = head;
+	    return;
 	}
 
-	for (Node i = head; i != null; i = i.next) {
+	for (i = head; i != null && i.key.compareTo(key) <= 0; i = i.next) {
 	    if (i.key.compareTo(key) == 0) {
 		i.value = val;
 		return;
 	    }
+	    
+	    temporary = i;
 	}
 	
-	tail.next = new Node();
-	tail.next.key = key;
-	tail.next.value = val;
-	tail = tail.next;
+       
+       
+	recent = new Node();
+	recent.key = key;
+	recent.value = val;
+	size++;
+
+	if (temporary != null) {
+	    temporary.next = recent;
+	    recent.next = i;
+	}
+
+	else {
+	    temporary = head.next;
+	    head = recent;
+	    head.next = temporary;
+	}
+
+	return;
 	
     }
 
@@ -161,7 +185,7 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
     public void delete(Key key)  {
         if (key == null) throw new IllegalArgumentException("argument to put() is null");
         // escreva seu método a seguir
-	Node temporary;
+	Node temporary = null;
 	for (Node i = head; i != null; i = i.next) {
 	    if (i.key.compareTo(key) == 0) {
 		temporary.next = i.next;
@@ -192,7 +216,7 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
     public void deleteMax() {
         if (isEmpty()) throw new java.util.NoSuchElementException("deleteMax(): Symbol table underflow error");
         // escreva seu método a seguir
-	Node temporary;
+	Node temporary = null;
 	for (Node i = head; i != null; i = i.next) {
 	    if (i.next == null) {
 		temporary.next = i.next;
@@ -219,9 +243,9 @@ public class LinkedListST<Key extends Comparable<Key>, Value> {
         LinkedListST<String, Integer> st;
         st = new LinkedListST<String, Integer>();
 	String comando, palavra;
-	In arquivo;
-	for (int i = 0; !StdIn.isEmpty(); i++) {
-            String key = StdIn.readString();
+	In arquivo = new In(args[0]);
+	for (int i = 0; !arquivo.isEmpty(); i++) {
+            String key = arquivo.readString();
             st.put(key, i);
         }
 	
